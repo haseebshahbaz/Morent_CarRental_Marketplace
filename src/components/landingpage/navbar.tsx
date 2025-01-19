@@ -1,8 +1,9 @@
-// import { Bell, Heart, Settings } from "lucide-react";
+// import { Bell, Heart, Settings } from 'lucide-react';
 // import Image from "next/image";
 // import Link from "next/link";
-// import { FilterIcon } from "./icons"; // Importing FilterIcon
+// import { FilterIcon } from "./icons";
 // import ProfileImg from "../../assets/Profil.png";
+// import { AuthButton } from "../auth/auth-button";
 
 // export function Navbar() {
 //   return (
@@ -61,14 +62,7 @@
 //               </div>
 //               <Settings className="h-6 w-6 text-[#596780] cursor-pointer hover:text-[#3563E9]" />
 //             </div>
-//             {/* Profile Icon */}
-//             <Image
-//               src={ProfileImg.src}
-//               alt="Profile"
-//               width={40}
-//               height={40}
-//               className="rounded-full cursor-pointer"
-//             />
+//             <AuthButton />
 //           </div>
 //         </div>
 
@@ -92,12 +86,12 @@
 //     </nav>
 //   );
 // }
+
 import { Bell, Heart, Settings } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
 import { FilterIcon } from "./icons";
-import ProfileImg from "../../assets/Profil.png";
-import { AuthButton } from "../auth/auth-button";
+import { AuthButton } from "@/components/auth/auth-button";
 
 export function Navbar() {
   return (

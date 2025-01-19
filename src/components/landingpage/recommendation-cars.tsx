@@ -31,7 +31,7 @@ export function RecommendationCars() {
   return (
     <section>
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-[16px] font-semibold">Recommendation Car</h2>
+        <h2 className="text-[32px] font-semibold">Recommendation Car</h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cars.map((car) => (

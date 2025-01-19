@@ -52,7 +52,7 @@ export function PopularCars() {
   return (
     <section className="mb-8 mt-8">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-[16px] font-semibold">Popular Cars</h2>
+        <h2 className="text-[32px] font-semibold">Popular Cars</h2>
         <Link 
           href="/category" 
           className="text-[#3563E9] text-[14px] font-semibold hover:underline"

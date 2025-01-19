@@ -1,52 +1,44 @@
 import { defineField, defineType } from 'sanity'
-import { UserIcon } from '@sanity/icons'
 
 export const customerType = defineType({
   name: 'customer',
   title: 'Customer',
   type: 'document',
-  icon: UserIcon,
   fields: [
     defineField({
       name: 'name',
+      title: 'Name',
       type: 'string',
-      title: 'Full Name',
     }),
     defineField({
       name: 'email',
-      type: 'string',
       title: 'Email',
+      type: 'string',
     }),
     defineField({
-      name: 'phone',
-      type: 'string',
+      name: 'image',
+      title: 'Profile Image',
+      type: 'url',
+    }),
+    defineField({
+      name: 'phoneNumber',
       title: 'Phone Number',
+      type: 'string',
     }),
     defineField({
       name: 'address',
-      type: 'object',
       title: 'Address',
-      fields: [
-        { name: 'street', type: 'string', title: 'Street' },
-        { name: 'city', type: 'string', title: 'City' },
-        { name: 'state', type: 'string', title: 'State' },
-        { name: 'zipCode', type: 'string', title: 'ZIP Code' },
-      ],
+      type: 'string',
     }),
     defineField({
-      name: 'drivingLicense',
-      type: 'object',
-      title: 'Driving License',
-      fields: [
-        { name: 'number', type: 'string', title: 'License Number' },
-        { name: 'expiryDate', type: 'date', title: 'Expiry Date' },
-      ],
+      name: 'dateOfBirth',
+      title: 'Date of Birth',
+      type: 'date',
     }),
     defineField({
-      name: 'bookings',
-      type: 'array',
-      title: 'Bookings',
-      of: [{ type: 'reference', to: [{ type: 'booking' }] }],
+      name: 'createdAt',
+      title: 'Created At',
+      type: 'datetime',
     }),
   ],
 })
