@@ -1,12 +1,12 @@
-import type { Metadata } from "next"
-import { Plus_Jakarta_Sans } from 'next/font/google'
-import "./globals.css"
+import { Inter } from 'next/font/google'
+import { NextAuthProvider } from "@/components/providers/session-providers"
+import './globals.css'
 
-const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ["latin"] })
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: "Morent - Car Rental",
-  description: "The best platform for car rental",
+export const metadata = {
+  title: 'MORENT - Car Rental',
+  description: 'Rent your dream car with MORENT',
 }
 
 export default function RootLayout({
@@ -16,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={plusJakartaSans.className}>{children}</body>
+      <body className={inter.className}>
+        <NextAuthProvider>{children}</NextAuthProvider>
+      </body>
     </html>
   )
 }
