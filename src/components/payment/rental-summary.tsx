@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { StarRating } from "../car-detail/star-rating"
 import { Button } from "@/components/ui/button"
-import CarImg from "../../assets/cardetail (1).png" 
+import CarImg from "../../assets/Bitcoin.png" 
 
 interface RentalSummaryProps {
   carName: string
@@ -47,21 +47,9 @@ export function RentalSummary({ carName, rating, reviewCount, subtotal, tax }: R
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mb-6">
-        <input
-          type="text"
-          placeholder="Apply promo code"
-          className="flex-1 h-[48px] px-4 rounded-[10px] bg-[#F6F7F9] border border-[#C3D4E966] focus:outline-none focus:border-[#3563E9] placeholder-[#90A3BF]"
-        />
-        <Button variant="outline" className="h-[48px]">
-          Apply now
-        </Button>
-      </div>
-
       <div className="flex justify-between items-center border-t border-[#C3D4E966] pt-6">
         <div>
           <h4 className="text-[16px] font-semibold">Total Rental Price</h4>
-          <p className="text-[12px] text-[#90A3BF]">Overall price and includes rental discount</p>
         </div>
         <span className="text-[24px] font-bold">${(subtotal + tax).toFixed(2)}</span>
       </div>
