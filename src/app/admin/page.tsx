@@ -3,10 +3,10 @@ import { RentalDetails } from "@/components/admin/rental-details"
 import { RentalStats } from "@/components/admin/rental-stats"
 import { RecentTransactions } from "@/components/admin/recent-transaction"
 import { Navbar } from "@/components/landingpage/navbar"
-import car1 from "../../assets/car (1).png"
-import car2 from "../../assets/Car (2).png"
-import car3 from "../../assets/cardetail (main).png"
-import car4 from "../../assets/HeroImg (1).png"
+import car1 from "../../assets/Car (icon).png"
+import car2 from "../../assets/HeroCardImg1.png"
+import car3 from "../../assets/HeroCardImg2.png"
+import car4 from "../../assets/Chart.png"
 
 const statsData = [
   { label: "Sport Car", value: 17439, color: "#1A202C" },

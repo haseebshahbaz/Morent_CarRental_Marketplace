@@ -1,55 +1,85 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { PickupDropdown } from "../landingpage/pickupdropdown";
+import { useState } from "react"
+import { format } from "date-fns"
+import { Calendar } from "@/components/ui/calendar"
+import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { CalendarIcon } from "lucide-react"
 
 interface RentalInfoProps {
-  onStartDateChange: (date: string) => void;
-  onEndDateChange: (date: string) => void;
+  onStartDateChange: (date: string) => void
+  onEndDateChange: (date: string) => void
 }
 
-export function RentalInfo({
-  onStartDateChange,
-  onEndDateChange,
-}: RentalInfoProps) {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+export function RentalInfo({ onStartDateChange, onEndDateChange }: RentalInfoProps) {
+  const [startDate, setStartDate] = useState<Date>()
+  const [endDate, setEndDate] = useState<Date>()
 
-  const handleStartDateChange = (date: string) => {
-    setStartDate(date);
-    onStartDateChange(date);
-  };
+  const handleStartDateSelect = (date: Date | undefined) => {
+    setStartDate(date)
+    if (date) {
+      onStartDateChange(date.toISOString())
+    }
+  }
 
-  const handleEndDateChange = (date: string) => {
-    setEndDate(date);
-    onEndDateChange(date);
-  };
+  const handleEndDateSelect = (date: Date | undefined) => {
+    setEndDate(date)
+    if (date) {
+      onEndDateChange(date.toISOString())
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 md:px-0">
       <div className="bg-white rounded-[10px] p-6">
         <h2 className="text-[20px] font-semibold mb-4">Rental Info</h2>
         <div className="grid gap-6">
-          <PickupDropdown
-            label="Pick-up Date"
-            placeholder="Select pick-up date"
-            options={["Today", "Tomorrow", "In 2 days"]}
-            onChange={(date) => {
-              console.log("Selected pick-up date:", date); // Debugging
-              handleStartDateChange(date);
-            }}
-          />
-          <PickupDropdown
-            label="Drop-off Date"
-            placeholder="Select drop-off date"
-            options={["Tomorrow", "In 2 days", "In 3 days"]}
-            onChange={(date) => {
-              console.log("Selected drop-off date:", date); // Debugging
-              handleEndDateChange(date);
-            }}
-          />
+          <div className="space-y-2">
+            <Label>Pick-up Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {startDate ? format(startDate, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={startDate}
+                  onSelect={handleStartDateSelect}
+                  initialFocus
+                  disabled={(date) => date < new Date() || (endDate ? date > endDate : false)}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Drop-off Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={endDate}
+                  onSelect={handleEndDateSelect}
+                  initialFocus
+                  disabled={(date) => date < (startDate || new Date())}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
+

@@ -5,13 +5,14 @@ import CarImg from "../../assets/Bitcoin.png"
 
 interface RentalSummaryProps {
   carName: string
+  carImage: string; // Add this line
   rating: number
   reviewCount: number
   subtotal: number
   tax: number
 }
 
-export function RentalSummary({ carName, rating, reviewCount, subtotal, tax }: RentalSummaryProps) {
+export function RentalSummary({ carName, carImage, rating, reviewCount, subtotal, tax }: RentalSummaryProps) {
   return (
     <div className="bg-white rounded-[10px] p-6">
       <h2 className="text-[20px] font-semibold text-[#1A202C] mb-4">Rental Summary</h2>
@@ -21,7 +22,7 @@ export function RentalSummary({ carName, rating, reviewCount, subtotal, tax }: R
 
       <div className="flex items-center gap-4 p-4 bg-[#F6F7F9] rounded-[10px] mb-6">
         <Image
-          src={CarImg}
+          src={carImage}
           alt={carName}
           width={132}
           height={56}

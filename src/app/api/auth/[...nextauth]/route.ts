@@ -15,45 +15,47 @@ const handler = NextAuth({
   },
   adapter: SanityAdapter(client),
   callbacks: {
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub!;
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.userId = user.id
       }
-      return session;
+      return token
+    },
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.id = token.userId as string
+      }
+      return session
     },
     async signIn({ user, account }) {
       if (account?.provider === "google") {
-        const { name, email, image } = user;
+        const { name, email, image } = user
         try {
-          const existingUser = await client.fetch(
-            `*[_type == "customer" && email == $email][0]`,
-            { email }
-          );
+          const existingUser = await client.fetch(`*[_type == "customer" && email == $email][0]`, { email })
 
           if (!existingUser) {
             await client.create({
-              _type: 'customer',
+              _type: "customer",
+              customerId: user.id,
               name,
               email,
-              image,
+              profilePicture: image,
+              role: "Customer",
               createdAt: new Date().toISOString(),
-            });
+            })
           }
         } catch (error) {
-          console.error("Error creating/fetching customer in Sanity:", error);
-          // Don't prevent sign in if there's an error, but log it
+          console.error("Error creating/fetching customer in Sanity:", error)
         }
       }
-      return true;
+      return true
     },
   },
   pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error', // Add this line to handle auth errors
+    signIn: "/auth/signin",
+    error: "/auth/error",
   },
 })
 
 export { handler as GET, handler as POST }
-
-
 

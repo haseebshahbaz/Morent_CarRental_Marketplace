@@ -1,0 +1,87 @@
+import { defineField, defineType } from "sanity"
+
+export const carType = defineType({
+  name: "car",
+  title: "Car",
+  type: "document",
+  fields: [
+    defineField({
+      name: "name",
+      title: "Name",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "brand",
+      title: "Brand",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "carType",
+      title: "Car Type",
+      type: "string",
+      options: {
+        list: ["Sedan", "SUV", "Convertible", "Hatchback", "Coupe"],
+      },
+    }),
+    defineField({
+      name: "fuelCapacity",
+      title: "Fuel Capacity",
+      type: "string",
+    }),
+    defineField({
+      name: "transmission",
+      title: "Transmission",
+      type: "string",
+      options: {
+        list: ["Manual", "Automatic"],
+      },
+    }),
+    defineField({
+      name: "seatingCapacity",
+      title: "Seating Capacity",
+      type: "number",
+    }),
+    defineField({
+      name: "pricePerDay",
+      title: "Price Per Day",
+      type: "number",
+    }),
+    defineField({
+      name: "location",
+      title: "Location",
+      type: "reference",
+      to: [{ type: "location" }],
+    }),
+    defineField({
+      name: "status",
+      title: "Status",
+      type: "string",
+      options: {
+        list: ["Available", "Rented", "Maintenance"],
+      },
+    }),
+    defineField({
+      name: "tags",
+      title: "Tags",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+    defineField({
+      name: "bookings",
+      title: "Bookings",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "booking" }] }],
+    }),
+    defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+    }),
+  ],
+})
+

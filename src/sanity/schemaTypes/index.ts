@@ -1,13 +1,12 @@
 import type { SchemaTypeDefinition } from "sanity"
 
-import { bookingType } from "./bookingType"
-import { customerType } from "./customerType"
-import { reviewType } from "./reviewType"
-import { locationType } from "./locationType"
-import { carType } from "./carType"
-import { adminType } from "./adminType"
+import { locationType } from "./location"
+import { carType } from "./car"
+import { bookingType } from "./booking"
+import { reviewType } from "./review"
+import { customerType } from "./customer"
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [carType, bookingType, customerType, reviewType, locationType, adminType],
+  types: [locationType, carType, bookingType, reviewType, customerType],
 }
 

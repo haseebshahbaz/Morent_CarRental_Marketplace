@@ -1,79 +1,24 @@
 import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation"
 import { Navbar } from "@/components/landingpage/navbar"
+import { Footer } from "@/components/landingpage/footer"
+import { ProfileForm } from "@/components/profile/customer-profile-form"
 import { client } from "@/sanity/lib/client"
-import { CustomerProfileForm } from "@/components/profile/customer-profile-form"
-import { BookingHistory } from "@/components/landingpage/booking-history"
 
-// async function getCustomerData(userId: string) {
-//   return client.fetch(
-//     `*[_type == "customer" && _id == $userId][0]{
-//     _id,
-//     name,
-//     email,
-//     image,
-//     phoneNumber,
-//     address,
-//     dateOfBirth,
-//     createdAt,
-//     "bookings": *[_type == "booking" && references(^._id)] | order(startDate desc) {
-//       _id,
-//       startDate,
-//       endDate,
-//       totalAmount,
-//       status,
-//       "car": car->{ name, image }
-//     }
-//   }`,
-//     { userId: `customer-${userId}` },
-//   )
-// }
-
-// export default async function ProfilePage() {
-//   const session = await getServerSession()
-//   console.log("session =>", session)  // Check session data
-//   if (!session?.user) {
-//     redirect("/auth/signin")
-//   }
-  
-//   console.log("session.user.id =>", session.user.id)  // Verify userId
-
-//   const customerData = await getCustomerData(session.user.id)
-//   console.log("customerData =>", customerData)  // Verify customer data fetched
-
-
-//   return (
-//     <div className="min-h-screen bg-[#F6F7F9]">
-//       <Navbar />
-//       <main className="container mx-auto px-4 py-8">
-//         <h1 className="text-3xl font-bold mb-6">Customer Profile</h1>
-//         {customerData ? (
-//           <>
-//             <CustomerProfileForm initialData={customerData} />
-//             <BookingHistory bookings={customerData.bookings} />
-//           </>
-//         ) : (
-//           <p>No customer data available. Please try again later.</p>
-//         )}
-//       </main>
-//     </div>
-//   )
-// }
-
-async function getCustomerData(userEmail: string) {
-  console.log("Fetching customer data for email:", userEmail);  // Debugging
+async function getCustomerData(userId: string) {
   return client.fetch(
-    `*[_type == "customer" && email == $userEmail][0]{
-      _id,
+    `*[_type == "customer" && customerId == $userId][0]{
+      customerId,
       name,
       email,
-      image,
+      profilePicture,
       phoneNumber,
       address,
-      dateOfBirth,
-      createdAt,
+      drivingLicense,
+      role,
       "bookings": *[_type == "booking" && references(^._id)] | order(startDate desc) {
         _id,
+        bookingId,
         startDate,
         endDate,
         totalAmount,
@@ -81,37 +26,32 @@ async function getCustomerData(userEmail: string) {
         "car": car->{ name, image }
       }
     }`,
-    { userEmail }
+    { userId: `google-oauth-${userId}` },
   )
 }
 
 export default async function ProfilePage() {
   const session = await getServerSession()
 
-  // Debugging: Log the session object
-  console.log("Session data:", session)
-
-  if (!session?.user?.email) {
-    console.error("User email is missing");
-    redirect("/auth/signin");
+  if (!session?.user) {
+    redirect("/auth/signin")
   }
 
-  const customerData = await getCustomerData(session.user.email)
+  const customerData = await getCustomerData(session.user.id)
+
+  if (!customerData) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="min-h-screen bg-[#F6F7F9]">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Customer Profile</h1>
-        {customerData ? (
-          <>
-            <CustomerProfileForm initialData={customerData} />
-            <BookingHistory bookings={customerData.bookings} />
-          </>
-        ) : (
-          <p>No customer data available. Please try again later.</p>
-        )}
+        <ProfileForm initialData={customerData} />
       </main>
+      <Footer />
     </div>
   )
 }
+
