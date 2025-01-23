@@ -82,33 +82,33 @@ export const bookingType = defineType({
       type: "reference",
       to: [{ type: "customer" }],
     }),
-    defineField({
-      name: "customerInfo",
-      title: "Customer Information",
-      type: "object",
-      fields: [
-        defineField({
-          name: "name",
-          title: "Name",
-          type: "string",
-        }),
-        defineField({
-          name: "phone",
-          title: "Phone",
-          type: "string",
-        }),
-        defineField({
-          name: "address",
-          title: "Address",
-          type: "string",
-        }),
-        defineField({
-          name: "city",
-          title: "City",
-          type: "string",
-        }),
-      ],
-    }),
+    // defineField({
+    //   name: "customerInfo",
+    //   title: "Customer Information",
+    //   type: "object",
+    //   fields: [
+    //     defineField({
+    //       name: "name",
+    //       title: "Name",
+    //       type: "string",
+    //     }),
+    //     defineField({
+    //       name: "phone",
+    //       title: "Phone",
+    //       type: "string",
+    //     }),
+    //     defineField({
+    //       name: "address",
+    //       title: "Address",
+    //       type: "string",
+    //     }),
+    //     defineField({
+    //       name: "city",
+    //       title: "City",
+    //       type: "string",
+    //     }),
+    //   ],
+    // }),
     defineField({
       name: "startDate",
       title: "Start Date",

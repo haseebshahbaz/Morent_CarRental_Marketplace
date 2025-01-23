@@ -68,8 +68,13 @@ export function ProfileDashboard({ customerData }: { customerData: CustomerData 
           <div>
             <p className="text-lg font-semibold">{customerData.email}</p>
             <p className="text-sm text-gray-500">
-              Member since: {new Date(customerData.customerId.split("-")[1]).toLocaleDateString()}
-            </p>
+  Standard Member
+</p>
+
+            <p className="text-sm text-gray-500">
+  Hi {customerData.name}, did you know you can update your profile anytime?
+</p>
+
             {!isEditing && (
               <Button onClick={() => setIsEditing(true)} className="mt-2">
                 Edit Profile

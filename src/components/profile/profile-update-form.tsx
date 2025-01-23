@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
-import { urlForImage } from "@/sanity/lib/image"
 
 type CustomerData = {
   customerId: string
@@ -27,7 +26,7 @@ type CustomerData = {
     number?: string
     expiryDate?: string
   }
-  role: string
+  dateOfBirth?: string
 }
 
 interface ProfileUpdateFormProps {
@@ -105,7 +104,7 @@ export function ProfileUpdateForm({ initialData, onCancel, onSuccess }: ProfileU
       const response = await fetch("/api/update-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, profilePicture: imageUrl }),
+        body: JSON.stringify({ ...formData, profilePicture: imageUrl, dateOfBirth: formData.dateOfBirth }),
       })
 
       if (!response.ok) {
@@ -140,13 +139,7 @@ export function ProfileUpdateForm({ initialData, onCancel, onSuccess }: ProfileU
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-4">
             <Image
-              src={
-                imageFile
-                  ? URL.createObjectURL(imageFile)
-                  : formData.profilePicture
-                    ? urlForImage(formData.profilePicture).url()
-                    : "/placeholder.svg"
-              }
+              src={imageFile ? URL.createObjectURL(imageFile) : formData.profilePicture || "/placeholder.svg"}
               alt={formData.name}
               width={100}
               height={100}
@@ -203,6 +196,16 @@ export function ProfileUpdateForm({ initialData, onCancel, onSuccess }: ProfileU
               type="date"
               value={formData.drivingLicense?.expiryDate || ""}
               onChange={handleLicenseChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Input
+              id="dateOfBirth"
+              name="dateOfBirth"
+              type="date"
+              value={formData.dateOfBirth || ""}
+              onChange={handleChange}
             />
           </div>
         </CardContent>
