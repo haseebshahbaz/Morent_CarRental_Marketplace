@@ -10,6 +10,8 @@ import { PaymentMethod } from "./payment-method"
 import { RentalSummary } from "./rental-summary"
 import { toast } from "@/hooks/use-toast"
 import { urlForImage } from "@/sanity/lib/image"
+import { BookingConfirmation } from "@/components/payment/booking-confirmation"
+
 
 interface PaymentFormProps {
   car: any
@@ -27,8 +29,14 @@ export function PaymentForm({ car }: PaymentFormProps) {
     agreeToTerms: false,
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [bookingConfirmation, setBookingConfirmation] = useState(null)
   const router = useRouter()
   const { data: session, status } = useSession()
+
+  useEffect(() => {
+    // Log session when it changes
+    console.log("Current session:", session)
+  }, [session])
 
   useEffect(() => {
     if (session?.user) {
@@ -72,7 +80,7 @@ export function PaymentForm({ car }: PaymentFormProps) {
 
     try {
       if (!session?.user?.id) {
-        throw new Error("User ID is missing. Please sign in again.")
+        throw new Error("Please sign in to complete your booking")
       }
 
       if (!formData.startDate || !formData.endDate) {
@@ -83,25 +91,25 @@ export function PaymentForm({ car }: PaymentFormProps) {
         throw new Error("Please agree to the terms and conditions")
       }
 
+      const payload = {
+        carId: car._id,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        totalAmount: car.pricePerDay * calculateDays(formData.startDate, formData.endDate),
+        customerInfo: {
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+        },
+      }
+
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.accessToken}`,
         },
-        body: JSON.stringify({
-          carId: car._id,
-          userId: session.user.id,
-          startDate: formData.startDate,
-          endDate: formData.endDate,
-          totalAmount: car.pricePerDay * calculateDays(formData.startDate, formData.endDate),
-          customerInfo: {
-            name: formData.name,
-            phone: formData.phone,
-            address: formData.address,
-            city: formData.city,
-          },
-        }),
+        body: JSON.stringify(payload),
       })
 
       const data = await response.json()
@@ -110,11 +118,10 @@ export function PaymentForm({ car }: PaymentFormProps) {
         throw new Error(data.message || "Failed to create booking")
       }
 
-      toast({
-        title: "Booking Successful",
-        description: "Your car has been booked successfully!",
+      setBookingConfirmation({
+        ...data.booking,
+        car: { name: car.name },
       })
-      router.push("/profile")
     } catch (error) {
       console.error("Error creating booking:", error)
       toast({
@@ -123,99 +130,98 @@ export function PaymentForm({ car }: PaymentFormProps) {
           error instanceof Error ? error.message : "There was an error processing your booking. Please try again.",
         variant: "destructive",
       })
-
-      if (error instanceof Error && error.message.includes("sign in")) {
-        router.push("/auth/signin")
-      }
     } finally {
       setIsLoading(false)
     }
   }
 
+  if (bookingConfirmation) {
+    return <BookingConfirmation booking={bookingConfirmation} />
+  }
+
   return (
-<form onSubmit={handleSubmit} className="space-y-8">
-  <div className="bg-white rounded-[10px] p-6">
-    <h2 className="text-[20px] font-semibold mb-4">Billing Info</h2>
-    <div className="grid md:grid-cols-2 gap-6">
-      <FormInput label="Name" placeholder="Your name" name="name" value={formData.name} onChange={handleChange} />
-      <FormInput
-        label="Phone Number"
-        placeholder="Phone number"
-        name="phone"
-        type="tel"
-        value={formData.phone}
-        onChange={handleChange}
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="bg-white rounded-[10px] p-6">
+        <h2 className="text-[20px] font-semibold mb-4">Billing Info</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <FormInput label="Name" placeholder="Your name" name="name" value={formData.name} onChange={handleChange} />
+          <FormInput
+            label="Phone Number"
+            placeholder="Phone number"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          <FormInput
+            label="Address"
+            placeholder="Address"
+            name="address"
+            className="md:col-span-2"
+            value={formData.address}
+            onChange={handleChange}
+          />
+          <FormInput
+            label="Town/City"
+            placeholder="Town or city"
+            name="city"
+            className="md:col-span-2"
+            value={formData.city}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      <RentalInfo
+        onStartDateChange={(date) => handleDateChange("startDate", date)}
+        onEndDateChange={(date) => handleDateChange("endDate", date)}
       />
-      <FormInput
-        label="Address"
-        placeholder="Address"
-        name="address"
-        className="md:col-span-2"
-        value={formData.address}
-        onChange={handleChange}
+
+      <PaymentMethod />
+
+      <div className="bg-white rounded-[10px] p-6">
+        <h2 className="text-[20px] font-semibold mb-4">Confirmation</h2>
+        <div className="space-y-4">
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              name="agreeToMarketing"
+              checked={formData.agreeToMarketing}
+              onChange={handleChange}
+              className="mt-1"
+            />
+            <span className="text-[14px] text-[#1A202C]">
+              I agree with sending marketing and newsletter emails. No spam, promised!
+            </span>
+          </label>
+          <label className="flex items-start gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              name="agreeToTerms"
+              checked={formData.agreeToTerms}
+              onChange={handleChange}
+              className="mt-1"
+            />
+            <span className="text-[14px] text-[#1A202C]">
+              I agree with our terms and conditions and privacy policy.
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <RentalSummary
+        carName={car.name}
+        carImage={urlForImage(car.image).url()}
+        rating={4}
+        reviewCount={440}
+        subtotal={car.pricePerDay * calculateDays(formData.startDate, formData.endDate)}
+        tax={0}
       />
-      <FormInput
-        label="Town/City"
-        placeholder="Town or city"
-        name="city"
-        className="md:col-span-2"
-        value={formData.city}
-        onChange={handleChange}
-      />
-    </div>
-  </div>
 
-  <RentalInfo
-    onStartDateChange={(date) => handleDateChange("startDate", date)}
-    onEndDateChange={(date) => handleDateChange("endDate", date)}
-  />
-
-  <PaymentMethod />
-
-  <div className="bg-white rounded-[10px] p-6">
-    <h2 className="text-[20px] font-semibold mb-4">Confirmation</h2>
-    <div className="space-y-4">
-      <label className="flex items-start gap-2 cursor-pointer">
-        <input
-          type="checkbox"
-          name="agreeToMarketing"
-          checked={formData.agreeToMarketing}
-          onChange={handleChange} // This makes sure the checkbox is controlled
-          className="mt-1"
-        />
-        <span className="text-[14px] text-[#1A202C]">
-          I agree with sending marketing and newsletter emails. No spam, promised!
-        </span>
-      </label>
-      <label className="flex items-start gap-2 cursor-pointer">
-        <input
-          type="checkbox"
-          name="agreeToTerms"
-          checked={formData.agreeToTerms}
-          onChange={handleChange} // This makes sure the checkbox is controlled
-          className="mt-1"
-        />
-        <span className="text-[14px] text-[#1A202C]">
-          I agree with our terms and conditions and privacy policy.
-        </span>
-      </label>
-    </div>
-  </div>
-
-  <RentalSummary
-    carName={car.name}
-    carImage={urlForImage(car.image).url()} // Ensure this returns a string
-    rating={4}
-    reviewCount={440}
-    subtotal={car.pricePerDay * calculateDays(formData.startDate, formData.endDate)}
-    tax={0}
-  />
-
-  <Button type="submit" className="w-full" disabled={isLoading}>
-    {isLoading ? "Processing..." : "Confirm Booking"}
-  </Button>
-</form>
-
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? "Processing..." : "Confirm Booking"}
+      </Button>
+    </form>
   )
 }
 

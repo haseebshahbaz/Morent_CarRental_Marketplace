@@ -4,6 +4,7 @@ import { Navbar } from "@/components/landingpage/navbar"
 import { Footer } from "@/components/landingpage/footer"
 import { ProfileForm } from "@/components/profile/customer-profile-form"
 import { client } from "@/sanity/lib/client"
+import { authOptions } from "../api/auth/[...nextauth]/route"
 
 async function getCustomerData(userId: string) {
   return client.fetch(
@@ -26,12 +27,12 @@ async function getCustomerData(userId: string) {
         "car": car->{ name, image }
       }
     }`,
-    { userId: `google-oauth-${userId}` },
+    { userId },
   )
 }
 
 export default async function ProfilePage() {
-  const session = await getServerSession()
+  const session = await getServerSession(authOptions)
 
   if (!session?.user) {
     redirect("/auth/signin")
@@ -40,7 +41,7 @@ export default async function ProfilePage() {
   const customerData = await getCustomerData(session.user.id)
 
   if (!customerData) {
-    return <div>Loading...</div>
+    return <div>No customer data found. Please contact support.</div>
   }
 
   return (

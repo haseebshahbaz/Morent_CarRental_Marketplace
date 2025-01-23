@@ -1,9 +1,9 @@
-import NextAuth from "next-auth"
+import NextAuth, { type NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import { SanityAdapter, SanityCredentials } from "next-auth-sanity"
+import { SanityAdapter } from "next-auth-sanity"
 import { client } from "@/sanity/lib/client"
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -13,49 +13,52 @@ const handler = NextAuth({
   session: {
     strategy: "jwt",
   },
-  adapter: SanityAdapter(client),
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (user) {
-        token.userId = user.id
+    async jwt({ token, account }) {
+      if (account) {
+        token.id = account.providerAccountId
       }
       return token
     },
     async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.userId as string
+      if (session.user) {
+        session.user.id = token.id as string
       }
       return session
     },
     async signIn({ user, account }) {
       if (account?.provider === "google") {
-        const { name, email, image } = user
         try {
-          const existingUser = await client.fetch(`*[_type == "customer" && email == $email][0]`, { email })
+          const existingCustomer = await client.fetch(`*[_type == "customer" && customerId == $customerId][0]`, {
+            customerId: account.providerAccountId,
+          })
 
-          if (!existingUser) {
+          if (!existingCustomer) {
             await client.create({
               _type: "customer",
-              customerId: user.id,
-              name,
-              email,
-              profilePicture: image,
+              customerId: account.providerAccountId,
+              name: user.name,
+              email: user.email,
+              profilePicture: user.image,
               role: "Customer",
               createdAt: new Date().toISOString(),
             })
           }
         } catch (error) {
-          console.error("Error creating/fetching customer in Sanity:", error)
+          console.error("Error in signIn callback:", error)
+          return false
         }
       }
       return true
     },
   },
+  adapter: SanityAdapter(client),
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
   },
-})
+}
 
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }
 
