@@ -12,19 +12,60 @@ import { Loader } from "@/components/ui/loader"
 import { Suspense } from "react"
 import { getServerSession } from "next-auth/next"
 import { RentNowButton } from "@/components/payment/rent-now-button"
+import { ReviewForm } from "@/components/car-detail/review-form"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
-
-async function getCar(id: string) {
-  return client.fetch(`*[_type == "car" && _id == $id][0]`, { id })
+interface Review {
+  _id: string
+  rating: number
+  comment: string
+  createdAt: string
+  customer: {
+    name: string
+    profilePicture: string
+  }
 }
 
-async function getRecommendedCars() {
+interface Car {
+  _id: string
+  name: string
+  description?: string
+  type: string
+  seatingCapacity: number
+  transmission: string
+  fuelCapacity: string
+  pricePerDay: number
+  originalPrice?: number
+  image: any
+  reviews?: Review[]
+}
+
+async function getCar(id: string): Promise<Car> {
+  return client.fetch(
+    `*[_type == "car" && _id == $id][0]{
+      ...,
+      reviews[]->{
+        _id,
+        rating,
+        comment,
+        createdAt,
+        customer->{
+          name,
+          profilePicture
+        }
+      }
+    }`,
+    { id },
+  )
+}
+
+async function getRecommendedCars(): Promise<Car[]> {
   return client.fetch('*[_type == "car" && "recommended" in tags][0...3]')
 }
 
 export default async function CarDetailPage({ params }: { params: { id: string } }) {
-  const session = await getServerSession()
-  const { id } = params // Destructure id from params
+  const session = await getServerSession(authOptions)
+  const { id } = params
   const car = await getCar(id)
   const recommendedCars = await getRecommendedCars()
 
@@ -97,14 +138,41 @@ export default async function CarDetailPage({ params }: { params: { id: string }
               <div className="bg-white rounded-[10px] p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg md:text-[20px] font-semibold">Reviews</h2>
-                  <span className="bg-[#3563E9] text-white text-xs md:text-[14px] px-2.5 py-1.5 rounded-[4px]">13</span>
+                  <span className="bg-[#3563E9] text-white text-xs md:text-[14px] px-2.5 py-1.5 rounded-[4px]">
+                    {car.reviews?.length || 0}
+                  </span>
                 </div>
 
                 <div className="divide-y divide-[#C3D4E966]">
-                  {car.reviews && car.reviews.map((review, index) => <ReviewCard key={index} {...review} />)}
+                  {car.reviews &&
+                    car.reviews.map((review: Review) => (
+                      <ReviewCard
+                        key={review._id}
+                        name={review.customer.name}
+                        avatar={review.customer.profilePicture}
+                        date={new Date(review.createdAt).toLocaleDateString()}
+                        rating={review.rating}
+                        comment={review.comment}
+                      />
+                    ))}
                 </div>
 
-                <button className="w-full text-center text-[#90A3BF] mt-6 text-sm md:text-base">Show All</button>
+                {session && (
+                  <div className="mt-8">
+                    <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
+                    <ReviewForm carId={car._id} />
+                  </div>
+                )}
+
+                {!session && (
+                  <p className="mt-8 text-center text-gray-500">
+                    Please{" "}
+                    <Link href="/auth/signin" className="text-blue-500 hover:underline">
+                      sign in
+                    </Link>{" "}
+                    to leave a review.
+                  </p>
+                )}
               </div>
             </Suspense>
 
@@ -117,7 +185,7 @@ export default async function CarDetailPage({ params }: { params: { id: string }
                   </Link>
                 </div>
                 <div className="grid gap-4 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                  {recommendedCars.map((car) => (
+                  {recommendedCars.map((car: Car) => (
                     <CarCard key={car._id} {...car} image={urlForImage(car.image).url()} />
                   ))}
                 </div>
@@ -130,11 +198,4 @@ export default async function CarDetailPage({ params }: { params: { id: string }
     </div>
   )
 }
-
-
-
-
-
-
-
 
