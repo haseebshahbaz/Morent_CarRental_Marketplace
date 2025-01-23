@@ -5,6 +5,8 @@ import { Footer } from "@/components/landingpage/footer"
 import { ProfileForm } from "@/components/profile/customer-profile-form"
 import { client } from "@/sanity/lib/client"
 import { authOptions } from "../api/auth/[...nextauth]/route"
+import { ProfileDashboard } from "@/components/profile/profile-dashboard"
+
 
 async function getCustomerData(userId: string) {
   return client.fetch(
@@ -48,8 +50,7 @@ export default async function ProfilePage() {
     <div className="min-h-screen bg-[#F6F7F9]">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Customer Profile</h1>
-        <ProfileForm initialData={customerData} />
+        <ProfileDashboard customerData={customerData} />
       </main>
       <Footer />
     </div>
