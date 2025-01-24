@@ -18,9 +18,3 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
-  // Handle POST request
-}
-
-// Add PUT and DELETE handlers as needed
-

@@ -45,7 +45,7 @@ export function BookingHistory({ bookings }: BookingHistoryProps) {
                       {new Date(booking.startDate).toLocaleDateString()} -{" "}
                       {new Date(booking.endDate).toLocaleDateString()}
                     </p>
-                    <p className="text-sm text-gray-500">Total: ${booking.totalAmount.toFixed(2)}</p>
+                    <p className="text-sm text-gray-500">Total: PKR {booking.totalAmount.toFixed(2)}</p>
                     <p
                       className="text-sm font-semibold"
                       style={{ color: booking.status === "Confirmed" ? "green" : "orange" }}

@@ -1,9 +1,9 @@
-'use client'
-import { useState, useEffect } from 'react'
+"use client"
+import { useState, useEffect } from "react"
 import { CarCard } from "./car-card"
-import { Loader } from "@/components/ui/loader"
-import { client } from '../../sanity/lib/client'
-import { urlForImage } from '../../sanity/lib/image'
+import { Skeleton } from "@/components/ui/skeleton"
+import { client } from "../../sanity/lib/client"
+import { urlForImage } from "../../sanity/lib/image"
 
 export function RecommendationCars() {
   const [cars, setCars] = useState([])
@@ -25,7 +25,6 @@ export function RecommendationCars() {
     fetchCars()
   }, [])
 
-  if (isLoading) return <Loader />
   if (error) return <div>Error: {error}</div>
 
   return (
@@ -34,13 +33,11 @@ export function RecommendationCars() {
         <h2 className="text-[32px] font-semibold">Recommendation Car</h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {cars.map((car) => (
-          <CarCard 
-            key={car._id} 
-            {...car}
-            image={urlForImage(car.image).url()}
-          />
-        ))}
+        {isLoading
+          ? Array(4)
+              .fill(0)
+              .map((_, index) => <Skeleton key={`recommendation-skeleton-${index}`} className="h-[400px]" />)
+          : cars.map((car) => <CarCard key={car._id} {...car} image={urlForImage(car.image).url()} />)}
       </div>
     </section>
   )

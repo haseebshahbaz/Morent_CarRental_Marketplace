@@ -16,7 +16,7 @@ export function ProfileCompletionPrompt({ onComplete }: ProfileCompletionPromptP
           Your profile is incomplete. Please take a moment to fill in the missing information to enhance your
           experience.
         </p>
-        <Button onClick={onComplete}>Complete Profile</Button>
+        <Button onClick={onComplete} className="bg-blue-700 hover:bg-blue-900">Complete Profile</Button>
       </CardContent>
     </Card>
   )

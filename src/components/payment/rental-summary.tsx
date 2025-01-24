@@ -1,7 +1,4 @@
 import Image from "next/image"
-import { StarRating } from "../car-detail/star-rating"
-import { Button } from "@/components/ui/button"
-import CarImg from "../../assets/Bitcoin.png" 
 
 interface RentalSummaryProps {
   carName: string
@@ -12,7 +9,7 @@ interface RentalSummaryProps {
   tax: number
 }
 
-export function RentalSummary({ carName, carImage, rating, reviewCount, subtotal, tax }: RentalSummaryProps) {
+export function RentalSummary({ carName, carImage, subtotal, tax }: RentalSummaryProps) {
   return (
     <div className="bg-white rounded-[10px] p-6">
       <h2 className="text-[20px] font-semibold text-[#1A202C] mb-4">Rental Summary</h2>
@@ -30,21 +27,21 @@ export function RentalSummary({ carName, carImage, rating, reviewCount, subtotal
         />
         <div>
           <h3 className="text-[20px] font-semibold mb-1">{carName}</h3>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <StarRating rating={rating} />
             <span className="text-[14px] text-[#596780]">{reviewCount}+ Reviewer</span>
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="space-y-4 mb-6">
         <div className="flex justify-between">
           <span className="text-[14px] text-[#90A3BF]">Subtotal</span>
-          <span className="text-[16px] font-semibold">${subtotal.toFixed(2)}</span>
+          <span className="text-[16px] font-semibold">PKR {subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-[14px] text-[#90A3BF]">Tax</span>
-          <span className="text-[16px] font-semibold">${tax.toFixed(2)}</span>
+          <span className="text-[16px] font-semibold">PKR {tax.toFixed(2)}</span>
         </div>
       </div>
 
@@ -52,7 +49,7 @@ export function RentalSummary({ carName, carImage, rating, reviewCount, subtotal
         <div>
           <h4 className="text-[16px] font-semibold">Total Rental Price</h4>
         </div>
-        <span className="text-[24px] font-bold">${(subtotal + tax).toFixed(2)}</span>
+        <span className="text-[24px] font-bold">PKR {(subtotal + tax).toFixed(2)}</span>
       </div>
     </div>
   )

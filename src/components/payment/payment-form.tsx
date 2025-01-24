@@ -13,8 +13,15 @@ import { urlForImage } from "@/sanity/lib/image"
 import { BookingConfirmation } from "@/components/payment/booking-confirmation"
 
 
+interface Car {
+  _id: string
+  name: string
+  pricePerDay: number
+  image: string
+}
+
 interface PaymentFormProps {
-  car: any
+  car: Car
 }
 
 export function PaymentForm({ car }: PaymentFormProps) {
@@ -23,20 +30,16 @@ export function PaymentForm({ car }: PaymentFormProps) {
     phone: "",
     address: "",
     city: "",
-    startDate: "",
-    endDate: "",
+    startDate: undefined as Date | undefined,
+    endDate: undefined as Date | undefined,
     agreeToMarketing: false,
     agreeToTerms: false,
   })
   const [isLoading, setIsLoading] = useState(false)
   const [bookingConfirmation, setBookingConfirmation] = useState(null)
+  const [bookedDates, setBookedDates] = useState<Date[]>([])
   const router = useRouter()
   const { data: session, status } = useSession()
-
-  useEffect(() => {
-    // Log session when it changes
-    console.log("Current session:", session)
-  }, [session])
 
   useEffect(() => {
     if (session?.user) {
@@ -46,6 +49,28 @@ export function PaymentForm({ car }: PaymentFormProps) {
       }))
     }
   }, [session])
+
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      try {
+        const response = await fetch(`/api/booked-dates?carId=${car._id}`)
+        if (!response.ok) {
+          throw new Error("Failed to fetch booked dates")
+        }
+        const data = await response.json()
+        setBookedDates(data.bookedDates.map((date: string) => new Date(date)))
+      } catch (error) {
+        console.error("Error fetching booked dates:", error)
+        toast({
+          title: "Error",
+          description: "Failed to fetch booked dates. Please try again.",
+          variant: "destructive",
+        })
+      }
+    }
+
+    fetchBookedDates()
+  }, [car._id])
 
   if (status === "loading") {
     return <div>Loading...</div>
@@ -61,15 +86,13 @@ export function PaymentForm({ car }: PaymentFormProps) {
     setFormData({ ...formData, [e.target.name]: value })
   }
 
-  const handleDateChange = (type: "startDate" | "endDate", date: string) => {
+  const handleDateChange = (type: "startDate" | "endDate", date: Date | undefined) => {
     setFormData((prev) => ({ ...prev, [type]: date }))
   }
 
-  const calculateDays = (start: string, end: string) => {
+  const calculateDays = (start: Date | undefined, end: Date | undefined) => {
     if (!start || !end) return 1
-    const startDate = new Date(start)
-    const endDate = new Date(end)
-    const diffTime = Math.abs(endDate.getTime() - startDate.getTime())
+    const diffTime = Math.abs(end.getTime() - start.getTime())
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays || 1
   }
@@ -93,8 +116,8 @@ export function PaymentForm({ car }: PaymentFormProps) {
 
       const payload = {
         carId: car._id,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
+        startDate: formData.startDate.toISOString(),
+        endDate: formData.endDate.toISOString(),
         totalAmount: car.pricePerDay * calculateDays(formData.startDate, formData.endDate),
         customerInfo: {
           name: formData.name,
@@ -115,6 +138,9 @@ export function PaymentForm({ car }: PaymentFormProps) {
       const data = await response.json()
 
       if (!response.ok) {
+        if (response.status === 409) {
+          throw new Error("This car is not available for the selected dates. Please choose different dates.")
+        }
         throw new Error(data.message || "Failed to create booking")
       }
 
@@ -175,6 +201,8 @@ export function PaymentForm({ car }: PaymentFormProps) {
       <RentalInfo
         onStartDateChange={(date) => handleDateChange("startDate", date)}
         onEndDateChange={(date) => handleDateChange("endDate", date)}
+        bookedDates={bookedDates}
+        carId={car._id}
       />
 
       <PaymentMethod />

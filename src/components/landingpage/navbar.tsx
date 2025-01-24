@@ -2,8 +2,6 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { Heart } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 import { FilterIcon } from "./icons"
 import { AuthButton } from "@/components/auth/auth-button"
@@ -73,7 +71,7 @@ export function Navbar() {
         <div className="flex h-[88px] items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-[#3563E9] text-[28px] md:text-[32px] font-bold leading-[36px]">
-            MORENT
+            Morent
           </Link>
 
           {/* Desktop Search Bar */}
@@ -118,7 +116,7 @@ export function Navbar() {
           <div className="flex items-center gap-4 md:gap-8">
             {/* Hide icons on smaller screens */}
             <div className="hidden md:flex gap-4">
-              <Heart className="h-6 w-6 text-[#596780] cursor-pointer hover:text-[#3563E9]" />
+              {/* <Heart className="h-6 w-6 text-[#596780] cursor-pointer hover:text-[#3563E9]" /> */}
             </div>
             <AuthButton />
           </div>

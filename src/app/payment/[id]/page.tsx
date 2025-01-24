@@ -28,7 +28,7 @@ export default async function PaymentPage({ params }: { params: { id: string } }
     <div className="min-h-screen bg-[#F6F7F9]">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Payment for {car.name}</h1>
+        <h1 className="text-2xl font-bold mb-6">Booking for {car.name}</h1>
         <Suspense fallback={<Loader />}>
           <PaymentForm car={car} userId={session.user.id} />
         </Suspense>

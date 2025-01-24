@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'MORENT - Car Rental',
-  description: 'Rent your dream car with MORENT',
+  title: 'Morent - Car Rental',
+  description: 'Rent your dream car with Morent',
 }
 
 export default function RootLayout({

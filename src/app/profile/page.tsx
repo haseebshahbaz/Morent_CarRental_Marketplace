@@ -2,9 +2,8 @@ import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation"
 import { Navbar } from "@/components/landingpage/navbar"
 import { Footer } from "@/components/landingpage/footer"
-import { ProfileForm } from "@/components/profile/customer-profile-form"
 import { client } from "@/sanity/lib/client"
-import { authOptions } from "../api/auth/[...nextauth]/route"
+import { authOptions } from "../api/auth/[...nextauth]/auth-options"
 import { ProfileDashboard } from "@/components/profile/profile-dashboard"
 
 

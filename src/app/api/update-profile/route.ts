@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { client } from "@/sanity/lib/client"
-import { authOptions } from "../auth/[...nextauth]/route"
+import { authOptions } from "../auth/[...nextauth]/auth-options"
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)

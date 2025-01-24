@@ -1,3 +1,4 @@
+
 // import { defineField, defineType } from "sanity"
 
 // export const carType = defineType({
@@ -18,8 +19,8 @@
 //       validation: (Rule) => Rule.required(),
 //     }),
 //     defineField({
-//       name: "carType",
-//       title: "Car Type",
+//       name: "type",
+//       title: "Type",
 //       type: "string",
 //       options: {
 //         list: ["Sedan", "SUV", "Convertible", "Hatchback", "Coupe"],
@@ -49,6 +50,20 @@
 //       type: "number",
 //     }),
 //     defineField({
+//       name: "originalPrice",
+//       title: "Original Price",
+//       type: "number",
+//       validation: (Rule) => Rule.min(0),
+//     }),
+//     defineField({
+//       name: "carType",
+//       title: "Car Type",
+//       type: "string",
+//       options: {
+//         list: ["SUV", "Sedan", "Convertible", "Hatchback", "Coupe"],
+//       },
+//     }),
+//     defineField({
 //       name: "location",
 //       title: "Location",
 //       type: "reference",
@@ -75,6 +90,12 @@
 //       of: [{ type: "reference", to: [{ type: "booking" }] }],
 //     }),
 //     defineField({
+//       name: "reviews",
+//       title: "Reviews",
+//       type: "array",
+//       of: [{ type: "reference", to: [{ type: "review" }] }],
+//     }),
+//     defineField({
 //       name: "image",
 //       title: "Image",
 //       type: "image",
@@ -84,6 +105,7 @@
 //     }),
 //   ],
 // })
+
 
 import { defineField, defineType } from "sanity"
 
@@ -105,12 +127,18 @@ export const carType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "carType",
-      title: "Car Type",
+      name: "type",
+      title: "Type",
       type: "string",
       options: {
         list: ["Sedan", "SUV", "Convertible", "Hatchback", "Coupe"],
       },
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "fuelCapacity",
@@ -134,6 +162,20 @@ export const carType = defineType({
       name: "pricePerDay",
       title: "Price Per Day",
       type: "number",
+    }),
+    defineField({
+      name: "originalPrice",
+      title: "Original Price",
+      type: "number",
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: "carType",
+      title: "Car Type",
+      type: "string",
+      options: {
+        list: ["SUV", "Sedan", "Convertible", "Hatchback", "Coupe"],
+      },
     }),
     defineField({
       name: "location",
@@ -175,6 +217,26 @@ export const carType = defineType({
         hotspot: true,
       },
     }),
+    defineField({
+      name: "imageGallery",
+      title: "Image Gallery",
+      type: "array",
+      of: [{ type: "image" }],
+    }),
+    defineField({
+      name: "galleryTitle",
+      title: "Gallery Title",
+      type: "string",
+      description: "Title for the image gallery (e.g., 'Sports car with the best design and acceleration')",
+    }),
+    defineField({
+      name: "galleryDescription",
+      title: "Gallery Description",
+      type: "string",
+      description:
+        "Description for the image gallery (e.g., 'Safety and comfort while driving a futuristic and elegant sports car')",
+    }),
   ],
 })
+
 

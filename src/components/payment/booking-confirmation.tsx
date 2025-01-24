@@ -36,15 +36,15 @@ export function BookingConfirmation({ booking }: BookingConfirmationProps) {
             <strong>End Date:</strong> {new Date(booking.endDate).toLocaleDateString()}
           </li>
           <li>
-            <strong>Total Amount:</strong> ${booking.totalAmount.toFixed(2)}
+            <strong>Total Amount:</strong> PKR {booking.totalAmount.toFixed(2)}
           </li>
         </ul>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button asChild>
-          <Link href="/profile">View Booking History</Link>
+      <Button asChild className="bg-blue-700 hover:bg-blue-900 transition-colors">
+      <Link href="/profile">View Booking History</Link>
         </Button>
-        <Button asChild variant="outline">
+        <Button asChild variant="outline" className="hover:bg-blue-700 hover:text-white">
           <Link href="/">Return to Home</Link>
         </Button>
       </CardFooter>

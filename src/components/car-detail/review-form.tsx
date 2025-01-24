@@ -7,6 +7,7 @@ import { StarRating } from "./star-rating"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/hooks/use-toast"
+import { Loader2 } from "lucide-react"
 
 interface ReviewFormProps {
   carId: string
@@ -65,6 +66,8 @@ export function ReviewForm({ carId }: ReviewFormProps) {
       })
     } finally {
       setIsSubmitting(false)
+      // Reload the page after submission
+      window.location.reload()
     }
   }
 
@@ -86,8 +89,15 @@ export function ReviewForm({ carId }: ReviewFormProps) {
         </label>
         <Textarea id="comment" value={comment} onChange={(e) => setComment(e.target.value)} rows={4} required />
       </div>
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Submitting..." : "Submit Review"}
+      <Button className="bg-blue-600 hover:bg-blue-700" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Submitting...
+          </>
+        ) : (
+          "Submit Review"
+        )}
       </Button>
     </form>
   )
