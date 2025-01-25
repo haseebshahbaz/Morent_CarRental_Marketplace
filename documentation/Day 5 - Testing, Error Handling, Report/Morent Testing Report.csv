@@ -1,0 +1,11 @@
+Test Case ID,Test Case Description,Test Steps,Expected Result,Actual Result,Status,Severity Level,Remarks
+TC-001,Car availability check,Search for cars on search bar,Available cars displayed,Displayed correctly,Passed,High,Search logic verified
+TC-002,Car booking flow,Select car - enter details ,Booking Successful,Booking Confirmed,Passed,High,Booking API Is working perfectly
+TC-003,Responsive design,Open site on different devices,Layout adapts,Responsive across devices,Passed,High,Verified the Website is Responsive
+TC-004,Booking error handling,Attempt booking with incomplete data,Error message displayed,Error shown for missing data,Passed,High,Error handling effective
+TC-005,User Authentication ,User signs in with Google ,User logged in or proper error shown	,User Authenticated ,Passed,High,"Verified login functionality
+"
+TC-006,User Update Profile,"User updates name, email, and phone number & more",Changes saved or proper validation error shown	,User profile updated or proper validation handled	,Passed,High,"Verified profile update functionality
+"
+TC-007,User Add Reviews to Cars,"User navigates to car details, adds valid review, submits without input, or tries when not logged in        ",Review added or proper error shown	,Review functionality and validations verified	,Passed,High,"Verified review submission
+"
