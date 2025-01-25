@@ -21,12 +21,18 @@ export async function GET(request: Request) {
     )
 
     // Generate an array of all booked dates
-    const allBookedDates = bookedDates.flatMap((booking) => {
+    interface Booking {
+      startDate: string
+      endDate: string
+    }
+    
+    const allBookedDates = bookedDates.flatMap((booking: Booking) => {
       const start = new Date(booking.startDate)
       const end = new Date(booking.endDate)
       const dates = []
-      for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
-        dates.push(new Date(date))
+      while (start <= end) {
+        dates.push(new Date(start))
+        start.setDate(start.getDate() + 1)
       }
       return dates
     })
