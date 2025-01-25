@@ -5,10 +5,22 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { client } from "../../sanity/lib/client"
 import { urlForImage } from "../../sanity/lib/image"
 
+interface Car {
+  _id: string;
+  name: string;
+  type: string;
+  image: string;
+  fuelCapacity: string;
+  transmission: string;
+  seatingCapacity: string;
+  pricePerDay: number;
+  originalPrice?: number;
+}
+
 export function RecommendationCars() {
-  const [cars, setCars] = useState([])
+  const [cars, setCars] = useState<Car[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -17,7 +29,11 @@ export function RecommendationCars() {
         setCars(result)
         setIsLoading(false)
       } catch (err) {
-        setError(err.message)
+        if (err instanceof Error) {
+          setError(err.message) // Access `message` only if `err` is an instance of `Error`.
+        } else {
+          setError("An unknown error occurred.")
+        }
         setIsLoading(false)
       }
     }
@@ -25,7 +41,7 @@ export function RecommendationCars() {
     fetchCars()
   }, [])
 
-  if (error) return <div>Error: {error}</div>
+  if (error) return <div className="text-red-500">Error: {error}</div>
 
   return (
     <section>
@@ -42,4 +58,3 @@ export function RecommendationCars() {
     </section>
   )
 }
-

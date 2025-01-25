@@ -7,8 +7,20 @@ import { client } from "../../sanity/lib/client"
 import { urlForImage } from "../../sanity/lib/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
+interface Car {
+  _id: string;
+  name: string;
+  type: string;
+  image: string;
+  fuelCapacity: string;
+  transmission: string;
+  seatingCapacity: string;
+  pricePerDay: number;
+  originalPrice?: number;
+}
+
 export function PopularCars() {
-  const [cars, setCars] = useState([])
+  const [cars, setCars] = useState<Car[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)

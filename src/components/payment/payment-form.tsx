@@ -22,6 +22,7 @@ interface Car {
 
 interface PaymentFormProps {
   car: Car
+  userId: string
 }
 
 export function PaymentForm({ car }: PaymentFormProps) {

@@ -134,9 +134,15 @@ import { urlForImage } from "../../sanity/lib/image"
 import { Skeleton } from "@/components/ui/skeleton"
 
 type Car = {
-  _id: string
-  image: any // Replace with the actual type if needed
-  [key: string]: any
+  _id: string;
+  name: string;
+  type: string;
+  image: string;
+  fuelCapacity: string;
+  transmission: string;
+  seatingCapacity: string;
+  pricePerDay: number;
+  originalPrice?: number;
 }
 
 const ITEMS_PER_PAGE = 9
@@ -157,9 +163,10 @@ export default function CategoryPage() {
       const result = await getCars(page, ITEMS_PER_PAGE)
       setCars((prevCars) => {
         const existingIds = prevCars.map((car) => car._id)
-        const newCars = result.cars.filter((car) => !existingIds.includes(car._id))
+        const newCars = (result.cars as Car[]).filter((car: Car) => !existingIds.includes(car._id))
         return [...prevCars, ...newCars]
       })
+      
       setHasMore(result.cars.length === ITEMS_PER_PAGE)
     } catch (error) {
       console.error("Error fetching cars:", error)
