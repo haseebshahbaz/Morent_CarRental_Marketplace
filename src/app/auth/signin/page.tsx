@@ -10,7 +10,7 @@ export default function SignIn() {
       <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-6 shadow-lg">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-[#3563E9]">
-            Welcome to Morent Login
+            Welcome to Go Toronto Taxi Login
           </h2>
         </div>
         <div className="mt-8 space-y-6">

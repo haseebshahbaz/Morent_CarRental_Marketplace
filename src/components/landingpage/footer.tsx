@@ -8,7 +8,7 @@ export function Footer() {
           <div className="mb-6 md:mb-0">
             <Link href="/" className="flex items-center">
               <span className="self-center text-2xl font-semibold whitespace-nowrap text-[#3563E9]">
-                MORENT
+                Go Toronto Taxi
               </span>
             </Link>
           </div>
@@ -101,7 +101,7 @@ export function Footer() {
           <span className="text-sm text-black-500 sm:text-center dark:text-black-400">
             © 2024{" "}
             <Link href="/" className="hover:underline">
-              Morent™
+              Go Toronto Taxi™
             </Link>
             . All Rights Reserved.
           </span>
