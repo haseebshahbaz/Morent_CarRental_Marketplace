@@ -96,10 +96,10 @@ export function CarCard({
 
         <div className="flex items-center justify-between mt-auto">
           <div>
-            <span className="text-lg font-bold text-black-600">PKR {pricePerDay}</span>
+            <span className="text-lg font-bold text-black-600">Contact For Price {pricePerDay}</span>
             <span className="text-sm text-gray-500">/day</span>
             {originalPrice && (
-              <p className="text-sm text-gray-400 line-through">PKR {originalPrice}</p>
+              <p className="text-sm text-gray-400 line-through">Contact For Price {originalPrice}</p>
             )}
           </div>
           <button

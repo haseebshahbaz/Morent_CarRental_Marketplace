@@ -71,7 +71,7 @@ export function Navbar() {
         <div className="flex h-[88px] items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-[#3563E9] text-[28px] md:text-[32px] font-bold leading-[36px]">
-            Morent
+            Go Torento Taxi
           </Link>
 
           {/* Desktop Search Bar */}

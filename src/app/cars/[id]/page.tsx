@@ -138,10 +138,10 @@ export default async function CarDetailPage({ params }: PageProps) {
 
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-xl md:text-[28px] font-bold">PKR {car.pricePerDay}</span>
+                        <span className="text-xl md:text-[28px] font-bold">Contact For Price {car.pricePerDay}</span>
                         <span className="text-sm md:text-[16px] text-[#90A3BF]">/day</span>
                         {car.originalPrice && (
-                          <p className="text-sm md:text-[16px] text-[#90A3BF] line-through">PKR {car.originalPrice}</p>
+                          <p className="text-sm md:text-[16px] text-[#90A3BF] line-through">Contact For Price {car.originalPrice}</p>
                         )}
                       </div>
                       <RentNowButton carId={car._id} isAuthenticated={!!session} />
